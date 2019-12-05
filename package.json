@@ -10,9 +10,15 @@
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0"
   },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "nodemon": "^2.0.1"
+  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "concurrently \"react-scripts start\" \"nodemon server/server.js\"",
+    "client": "react-scripts start",
+    "server": "nodemon server/server.js",
+    "build": "react-scripts build && rm -rf server/build && mv build server",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
