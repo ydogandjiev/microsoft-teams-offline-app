@@ -18,7 +18,7 @@ function App() {
         localStorage["data"] = data;
         setData(data);
       })
-      .catch(err => setData({ error: err }));
+      .catch(err => setData(d => ({ ...d, error: err })));
   }, []);
 
   return (
