@@ -19,8 +19,9 @@ function App() {
     )
       .then(res => res.json())
       .then(serverData => {
-        localStorage["data"] = JSON.stringify(serverData);
-        setData(d => ({ ...d, loading: false, error: null }));
+        const d = {...serverData, dt_fetch: new Date()};
+        localStorage["data"] = JSON.stringify(d);
+        setData({ ...d, loading: false, error: null });
       })
       .catch(err => {
         setData(d => ({ ...d, loading: false, error: err }));
@@ -42,7 +43,7 @@ function App() {
                 <div>Low: {data.main.temp_min}</div>
                 <div>Conditions: {data.weather[0].main}</div>
                 <div>Location: {data.name}</div>
-                <div>Updated: {new Date(data.dt).toString()}</div>
+                <div>Updated: {new Date(data.dt_fetch).toString()}</div>
               </div>
             )}
           </div>
