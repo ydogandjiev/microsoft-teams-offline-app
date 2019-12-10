@@ -6,19 +6,25 @@ function App() {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    if (localStorage["data"]) {
-      setData(localStorage["data"]);
-    };
+    try {
+      if (localStorage["data"]) {
+        setData(JSON.parse(localStorage["data"]));
+      }
+    } catch (err) {
+      localStorage.removeItem("data");
+    }
 
     fetch(
       "https://api.openweathermap.org/data/2.5/weather?q=Seattle,US&units=imperial&APPID=d0cb21f45c215358b09cc3c09b5ef147"
     )
       .then(res => res.json())
-      .then(data => {
-        localStorage["data"] = data;
-        setData(data);
+      .then(serverData => {
+        localStorage["data"] = JSON.stringify(serverData);
+        setData(d => ({ ...d, loading: false, error: null }));
       })
-      .catch(err => setData(d => ({ ...d, error: err })));
+      .catch(err => {
+        setData(d => ({ ...d, loading: false, error: err }));
+      });
   }, []);
 
   return (
@@ -42,7 +48,18 @@ function App() {
           </div>
           <div>
             {data.error && (
-              <div>Error: {data.error.toString()}</div>
+              <div>
+                <br/>
+                <div>Error: {data.error.toString()}</div>
+              </div>
+            )}
+          </div>
+          <div>
+            {data.loading && (
+              <div>
+                <br/>
+                <div>Refreshing...</div>
+              </div>
             )}
           </div>
         </div>
