@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import logo from './logo.svg';
+import { Alert, Divider, Flex, Image, Text } from "@fluentui/react";
+
+import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
@@ -19,7 +21,7 @@ function App() {
     )
       .then(res => res.json())
       .then(serverData => {
-        const d = {...serverData, dt_fetch: new Date()};
+        const d = { ...serverData, dt_fetch: new Date() };
         localStorage["data"] = JSON.stringify(d);
         setData({ ...d, loading: false, error: null });
       })
@@ -37,35 +39,47 @@ function App() {
         <div>
           <div>
             {data.main && data.main.temp && (
-              <div>
-                <div>Temp: {data.main.temp}</div>
-                <div>High: {data.main.temp_max}</div>
-                <div>Low: {data.main.temp_min}</div>
-                <div>Conditions: {data.weather[0].main}</div>
-                <div>Location: {data.name}</div>
-                <div>Updated: {new Date(data.dt_fetch).toString()}</div>
-              </div>
+              <Flex column gap="gap.small">
+                <Flex hAlign="center">
+                  <Image src={`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}></Image>
+                </Flex>
+                <Text>Temp: {data.main.temp}</Text>
+                <Text>High: {data.main.temp_max}</Text>
+                <Text>Low: {data.main.temp_min}</Text>
+                <Text>Conditions: {data.weather[0].main}</Text>
+                <Text>Location: {data.name}</Text>
+                <Text>Updated: {new Date(data.dt_fetch).toString()}</Text>
+              </Flex>
             )}
           </div>
           <div>
             {data.error && (
-              <div>
-                <br/>
-                <div>Error: {data.error.toString()}</div>
-              </div>
+              <Flex column gap="gap.small">
+                <Divider />
+                <Flex hAlign="center">
+                  <Alert>Error: {data.error.toString()}</Alert>
+                </Flex>
+              </Flex>
             )}
           </div>
           <div>
             {data.loading && (
-              <div>
-                <br/>
-                <div>Refreshing...</div>
-              </div>
+              <Flex column gap="gap.small">
+                <Divider />
+                <Flex hAlign="center">
+                  <Alert>Loading...</Alert>
+                </Flex>
+              </Flex>
             )}
           </div>
         </div>
       ) : (
-        <div>Loading...</div>
+        <Flex column gap="gap.small">
+          <Divider />
+          <Flex hAlign="center">
+            <Alert>Loading...</Alert>
+          </Flex>
+        </Flex>
       )}
     </div>
   );
